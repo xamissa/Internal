@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_snippet_s_website_form_js_000" inherit_id="website.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_crm_captcha/static/src/snippets/s_website_form/000.js"/>
+    </xpath>
+</template>
+
+</odoo>

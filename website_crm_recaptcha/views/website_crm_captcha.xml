@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="contactus_form_captcha" name="Contact Form - Captcha" inherit_id="website_crm.contactus_form" customize_show="True">
+    <xpath expr="//div[@data-name='Submit Button']" position="before">
+      <div t-attf-class="form-group col-12 s_website_form_field s_website_form_model_required #{error and 'captcha' in error and 'has-error' or ''}" data-type="char" data-name="Captcha">
+          <div class="row s_col_no_resize s_col_no_bgcolor">
+              <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity-captcha">
+                  <span class="s_website_form_label_content">Captcha</span>
+              </label>
+              <div class="col-sm">
+                  <img class="mb-3 website-crm-captcha-img" alt="Captcha Image"  t-att-src="captcha_src_data" />
+                  <input id="opportunity-captcha" type="text" class="form-control s_website_form_input" name="captcha" required="True" autocomplete="off" placeholder="Please enter the captcha code"/>
+              </div>
+          </div>
+      </div>
+    </xpath>
+</template>
+
+</odoo>
