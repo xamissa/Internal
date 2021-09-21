@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <template id="report_quote_note_inherit" inherit_id="helpdesk_ticket_v12.report_hours_quote">
+         <xpath expr="//div[@class='page']" position="inside">
+            <div t-if="doc.company_id.quote_note" name="quote_note">
+                <div>
+                    <strong>Quotation Notes:</strong><br/>
+                    <span t-field="doc.company_id.quote_note"/>
+                </div>
+            </div>
+         </xpath>   
+     </template>
+</odoo>

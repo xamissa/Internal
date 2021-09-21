@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="helpdesk_ticket_form_inherit" model="ir.ui.view">
+       <field name="name">helpdesk.ticket.form.inherit</field>
+       <field name="model">helpdesk.ticket</field>
+       <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+       <field name="arch" type="xml">
+           <xpath expr="//field[@name='priority']" position="after">
+		   <field name="create_date"/>
+		   <field name="approved_by"/>
+		   <field name="invoice_id"/>
+           </xpath>
+           <xpath expr="//field[@name='partner_email']" position="after">
+                  <field name="close_date"/>
+                  <field name="total_hour" string='Quoted Hour'/>
+                  <field name="billable_hour"/>
+                  <field name="remaining_hours"/>
+                  <field name="spent_hours"/>
+           </xpath>
+           <xpath expr="//button[@name='assign_ticket_to_self']" position="after">
+                  <button name="%(action_helpdesk_ticket_invoice_create)d" string="Create Invoice" type="action" class="oe_highlight"/>
+	   </xpath>
+	   <field name="task_id" position="attributes">
+		  <attribute name="invisible">1</attribute>
+	   </field>
+
+       </field>
+     </record>
+
+    <record id="hours_quoted_form" model="ir.ui.view">
+       <field name="name">helpdesk.ticket.form.quoted</field>
+       <field name="model">helpdesk.ticket</field>
+       <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+       <field name="arch" type="xml">
+           <xpath expr="//notebook" position="inside">
+               <page string="Quote" name="hours_quoted">
+                  <field name="hours_quoted_ids">
+                          <tree editable="bottom" string="Quote">
+                               <field name="product_id"/>
+                               <field name="description"/>
+                               <field name="free_text"/>
+                               <field name="unit_price"/>
+                               <field name="quoted_hour"/>
+                               <field name="taxes_id" widget="many2many_tags" options="{'no_create': True}"/>
+                               <field name="subtotal"/>
+                          </tree>
+                  </field>                  
+
+                  <group class="oe_subtotal_footer" col="10" name="hour_total">
+                     <div class="oe_inline o_td_label text-left">
+                           <!--label for="hour_total" /--><strong>Total</strong>
+                     </div>
+                       <field name="hour_total" invisible="1"/>
+                     <div class="text-right">
+                         <field name="total_hour" nolabel="1"/>
+                     </div>
+                     <field name="hour_total" invisible="1"/>
+                     <!--field name="hour_total" invisible="1" /-->
+                     <field name="amount_tax" nolabel="1"/>
+                     <field name="hour_total" invisible="1"/>
+                     <field name="hour_total" nolabel="1" widget="monetary"/>
+                 </group>
+
+
+                  <div class="oe_clear"/>
+	  </page>
+
+	  	<page string="Testing" name="testing_hours">
+			<field name="testing_hour_ids">
+				<tree editable="bottom" string="Testing Hour">
+					<field name="user_id"/>
+					<field name="description"/>
+					<field name="test_hour"/>
+				</tree>
+			</field>  
+			<group class="oe_subtotal_footer" col="10" name="testing_hour_total">
+				<div class="oe_inline o_td_label text-left">
+					<strong>Total :</strong>
+				</div>
+				<field name="total_test_hours" nolabel="1" widget="monetary"/>
+			</group>
+			<div class="oe_clear"/>
+		</page>
+           </xpath>
+
+       </field>
+     </record>
+
+
+
+     <!--record id="hr_timesheet.hr_timesheet_line_tree" model="ir.ui.view"-->
+     <record id="hr_timesheet_line_tree" model="ir.ui.view">
+       <field name="name">account.analytic.line.tree.hr_timesheet</field>
+       <field name="model">account.analytic.line</field>
+       <field name="arch" type="xml">
+           <tree>
+                    <field name="date"/>
+                    <field name="user_id" string="Employee"/>
+                    <field name="partner_id" string="Customer"/>
+                    <field name="task_id" string="Helpdesk Ticket"/>
+                    <field name="name"/>
+                    <field name="time_spent"/>
+                    <field name="unit_amount" string="Billable Time"/>
+                    <!--field name="invoice_id.date_invoice" string="Time Invoiced"/-->
+                    <field name="invoice_id" string="Invoice Number"/>
+                    <field name="invoice_date" string="Invoice Date"/>
+                    <field name="state1" string="Helpdesk Ticket Status"/>
+                </tree>
+       </field>
+     </record>
+
+
+     <record id="hr_timesheet_line_search_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.line.search.inherit</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group" position="inside">
+                    <filter string="Last Week" name="last_week" domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('date','>=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d
+00:00:00'))]"/>
+                    <filter string="This Week" name="this_week" domain="[
+                ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                </xpath>
+            </field>
+    </record>
+
+   <record id="helpdesk.helpdesk_tickets_view_tree" model="ir.ui.view">
+       <field name="name">helpdesk.ticket.tree</field>
+       <field name="model">helpdesk.ticket</field>
+       <field name="arch" type="xml">
+           <tree string="Tickets">
+                <field name="partner_id"/>
+                <field name="display_name" string="Helpdesk Ticket"/>
+                <field name="user_id"/>
+                <field name="create_date" string="Opened"/>
+                <field name="total_hour" string="Quoted Houes"/>
+                <!--field name="assign_hours" string="Hours Quoted"/-->
+                <field name="billable_hour" string="Billable Hours" sum="Total Billable"/>
+                <field name="remaining_hours" sum="Total Remaining"/>
+                <field name="spent_hours" string="Time Spent" sum="Total Spent"/>
+                <field name="stage_id" string="Status"/>
+                <field name="close_date" string="Date Closed"/>
+                <field name="invoice_id" string="Invoice nr"/>
+            </tree>
+       </field>
+     </record>
+
+     <record id="res_partner_form_inherit" model="ir.ui.view">
+	     <field name="name">res.partner.form.inherit</field>
+	     <field name="model">res.partner</field>
+	     <field name="inherit_id" ref="base.view_partner_form"/>
+	     <field name="arch" type="xml">
+		     <xpath expr="//field[@name='category_id']" position="after">
+			     <field name="project_id"/>
+	             </xpath>
+	     </field>
+     </record>
+
+
+     <record id="timesheet_entry1" model="mail.template">
+             <field name="name">Timesheet Entry</field>
+             <!--  <field name="email_from">admin@yourcompany.example.com</field> -->
+             <field name="email_to">${object.get_email_to()}</field>
+             <field name="email_from">${(object.user_id.email or object.company_id.email)|safe}</field>
+             <field name="subject">Timesheet Entry</field>
+             <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+             <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;">
+<tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+<!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    % set company = object.company_id or object.user_id.company_id or user.company_id
+                    <span style="font-size: 10px;">Helpdesk Ticket</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">${object.name or 'Document'}</span>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 13px;">
+                    Hi,<br/><br/>
+                    Ticket : ${object.name}
+                    <br/><br/>
+                    % if object.project_id
+                        Project : ${object.project_id.name}
+                    % endif
+                    <br/><br/>
+                    % if object.partner_id
+                        Customer : ${object.partner_id.name}
+                    %endif
+                    <br/><br/>
+                </td></tr>
+
+                <tr style="border:1px solid;">
+                    <table style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border:1px" border="1">
+                        <thead align="center" style="min-width: 590px;">
+                            <tr style="border:1px solid;">
+                                <th>Date</th>
+                                <th>Employee</th>
+                                <th>Description</th> 
+                                <th class="text-right">Time Spent</th>
+                                <th class="text-right">Billable Hours</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                         % for line in ctx.get('timesheet_ids'):
+                            <tr>
+                                <td style="text-align:right;"> ${line.date} </td>
+                                <td style="text-align:left;"> ${line.employee_id} </td>
+                                <td style="text-align:left;"> ${line.name} </td>
+                                <td style="text-align:right;"> ${line.time_spent} </td>
+                                <td style="text-align:right;"> ${line.unit_amount} </td>
+                            </tr>
+                         % endfor
+                        </tr>
+                    </table>
+                </tr>
+
+                <tr><td style="text-align:center;">
+                    <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+
+</tbody>
+</table>
+</td></tr>
+</table>                
+             </field>
+     </record>
+
+
+</odoo>

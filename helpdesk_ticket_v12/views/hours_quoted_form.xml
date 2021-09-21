@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+   <!-- Action Window -->
+     <record model="ir.actions.act_window" id="hours_quoted_action">
+       <field name="name">Hours Quoted</field>
+       <field name="res_model">hours.quoted</field>
+       <field name="view_mode">tree,form</field>
+       <field name="help" type="html">
+         <p class="oe_view_nocontent_create">Hours Quoted</p>
+       </field>
+     </record>
+   
+   <!-- Tree View -->
+
+     <record model="ir.ui.view" id="hours_quoted_tree_view">
+       <field name="name">hours.quoted.tree</field>
+       <field name="model">hours.quoted</field>
+       <field name="arch" type="xml">
+         <tree string="Hours Quoted">
+             <field name="product_id"/>
+             <field name="description"/>
+             <field name="free_text"/>
+             <field name="quoted_hour"/>
+             <field name="unit_price"/>
+             <field name="subtotal"/>
+         </tree>
+       </field>
+     </record>
+
+  <!-- Form View -->
+
+     <record model="ir.ui.view" id="hours_quoted_form_view">
+       <field name="name">hours.quoted.form</field>
+       <field name="model">hours.quoted</field>
+       <field name="arch" type="xml">
+          <form string="Hours Quoted">
+             <sheet>
+                 <group name="hours_quoted" string="Hours Quoted">
+                    <field name="product_id"/>
+                    <field name="description"/>
+                    <field name="free_text"/>
+                    <field name="quoted_hour"/>
+                    <field name="unit_price"/>
+                    <field name="subtotal"/>
+                 </group>
+             </sheet>
+          </form>
+       </field>
+     </record>
+
+   <!-- Menu Item -->
+
+     <menuitem id="menu_hours_quoted" name="Hours Quoted" parent="helpdesk.helpdesk_menu_config" action="hours_quoted_action"/>
+
+
+</odoo>

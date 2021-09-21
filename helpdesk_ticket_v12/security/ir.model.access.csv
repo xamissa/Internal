@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hours_quoted,hours.quoted,helpdesk_ticket_v12.model_hours_quoted,,1,1,1,1
+access_testing_hours,testing.hours,helpdesk_ticket_v12.model_testing_hours,,1,1,1,1
+access_helpdesk_ticket_invoice_create,helpdesk.ticket.invoice.create,helpdesk_ticket_v12.model_helpdesk_ticket_invoice_create,,1,1,1,1
